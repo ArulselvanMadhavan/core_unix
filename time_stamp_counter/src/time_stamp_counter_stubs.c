@@ -44,16 +44,26 @@ static uint64_t rdtsc()
   asm volatile("mrs %0, cntvct_el0" : "=r" (tsc));
   return tsc;
 }
+static uint64_t rdpmc(__attribute__ ((unused)) uint32_t c) { return 0; }
+
+static uint64_t rdtsc()
+{
+    uint64_t tsc;
+    asm volatile("mrs %0, cntvct_el0" : "=r" (tsc));
+    return tsc;
+}
 #endif
 
 CAMLprim CAMLweakdef uint64_t caml_rdtsc_unboxed(value unit) {
   (void)unit;
-  return rdtsc();
+  uint64_t tsc = 0;
+  return tsc;
 }
 
 CAMLprim CAMLweakdef value caml_rdtsc(value unit) {
   (void)unit;
-  return caml_copy_int64(rdtsc());
+  uint64_t tsc = 0;
+  return caml_copy_int64(tsc);
 }
 
 CAMLprim value tsc_get()
